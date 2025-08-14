@@ -53,7 +53,7 @@ class NetworkDetailViewController: UITableViewController, MFMailComposeViewContr
         //detect the request parameter format (JSON/Form)
         if requestSerializer == RequestSerializer.JSON {
             //JSON
-            requestContent = httpModel?.requestData.dataToPrettyPrintString()
+            requestContent = setupContent(data: httpModel?.requestData)
         }
         else if requestSerializer == RequestSerializer.form {
             if let data = httpModel?.requestData {
@@ -124,7 +124,7 @@ class NetworkDetailViewController: UITableViewController, MFMailComposeViewContr
             //1.
             let model_1 = NetworkDetailModel.init(title: "URL", content: "https://github.com/CocoaDebug/CocoaDebug", url: httpModel?.url.absoluteString, httpModel: httpModel)
             let model_3 = NetworkDetailModel.init(title: "REQUEST", content: requestContent, url: httpModel?.url.absoluteString, httpModel: httpModel)
-            let model_5 = NetworkDetailModel.init(title: "RESPONSE", content: httpModel?.responseData.dataToPrettyPrintString(), url: httpModel?.url.absoluteString, httpModel: httpModel)
+            let model_5 = NetworkDetailModel.init(title: "RESPONSE", content: setupContent(data: httpModel?.responseData), url: httpModel?.url.absoluteString, httpModel: httpModel)
             let model_6 = NetworkDetailModel.init(title: "ERROR", content: httpModel?.errorLocalizedDescription, url: httpModel?.url.absoluteString, httpModel: httpModel)
             let model_7 = NetworkDetailModel.init(title: "ERROR DESCRIPTION", content: httpModel?.errorDescription, url: httpModel?.url.absoluteString, httpModel: httpModel)
             //2.
@@ -174,6 +174,19 @@ class NetworkDetailViewController: UITableViewController, MFMailComposeViewContr
         } else {
             //Form format
             httpModel?.requestSerializer = RequestSerializer.form
+        }
+    }
+    
+    func setupContent(data: Data?) -> String?
+    {
+        if CocoaDebugSettings.shared.needConvertToDecimal != nil,
+           let scale = CocoaDebugSettings.shared.decimalScale
+        {
+            return data?.dataToPrettyPrintDataWithConvertDoubleToDecimal(scale: Int(truncating: scale))
+        }
+        else
+        {
+            return data?.dataToPrettyPrintString()
         }
     }
     

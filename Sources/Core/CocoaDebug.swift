@@ -31,10 +31,14 @@ import UIKit
     @objc public static var mainColor: String = "#42d459"
     ///protobuf url and response class transfer map. Default value is `nil`.
     @objc public static var protobufTransferMap: [String: [String]]? = nil
+    
+    @objc public static var needConvertToDecimal: String? = nil
+    
+    @objc public static var decimalScale: NSNumber? = nil
 
-    //MARK: - CocoaDebug enable
+    //MARK: - CocoaDebug enableC
     @objc public static func enable() {
-        initializationMethod(serverURL: serverURL, ignoredURLs: ignoredURLs, onlyURLs: onlyURLs, ignoredPrefixLogs: ignoredPrefixLogs, onlyPrefixLogs: onlyPrefixLogs, additionalViewController: additionalViewController, emailToRecipients: emailToRecipients, emailCcRecipients: emailCcRecipients, mainColor: mainColor, protobufTransferMap: protobufTransferMap)
+        initializationMethod(serverURL: serverURL, ignoredURLs: ignoredURLs, onlyURLs: onlyURLs, ignoredPrefixLogs: ignoredPrefixLogs, onlyPrefixLogs: onlyPrefixLogs, additionalViewController: additionalViewController, emailToRecipients: emailToRecipients, emailCcRecipients: emailCcRecipients, mainColor: mainColor, protobufTransferMap: protobufTransferMap, needConvertToDecimal: needConvertToDecimal, decimalScale: decimalScale)
     }
     
     //MARK: - CocoaDebug disable

@@ -169,6 +169,104 @@ extension Data {
             //            }
         }
     }
+    
+    func dataToPrettyPrintDataWithConvertDoubleToDecimal(
+        scale: Int
+    ) -> String?
+    {
+        let dictionary = self.dataToDictionary()
+        
+        if let str = dictionary?.convertParamsForDecimal(dictionary, scale: scale)?.dictionaryToString() {
+            return str
+        } else {
+            //2.protobuf
+            //            if let message = try? GPBMessage.parse(from: self) {
+            //                if message.serializedSize() > 0 {
+            //                    return message.description
+            //                } else {
+            //                    //3.utf-8 string
+            //                    return String(data: self, encoding: .utf8)
+            //                }
+            //            } else {
+            //3.utf-8 string
+            return String(data: self, encoding: .utf8)
+            //            }
+        }
+    }
+}
+
+extension Dictionary
+{
+    func convertParamsForDecimal(_ dict: [String: Any]?, scale: Int) -> [String: Any]?
+    {
+        guard var dict = dict
+        else { return nil }
+        
+        dict = dict.mapValues
+        {
+            value in
+            
+            if let arrayValue = value as? [Any]
+            {
+                return convertArrayForDecimal(array: arrayValue, scale: scale)
+            }
+            else if let dicValue = value as? [String: Any]
+            {
+                return convertParamsForDecimal(dicValue, scale: scale)!
+            }
+            else if let doubleValue = value as? Double
+            {
+                return Decimal(doubleValue).rounded(scale: scale)
+            }
+            else
+            {
+                return value
+            }
+        }
+        
+        return dict
+    }
+    
+    func convertArrayForDecimal(array: [Any], scale: Int) -> [Any]
+    {
+        return array.map
+        {
+            if let array = $0 as? [Any]
+            {
+                return convertArrayForDecimal(array: array, scale: scale)
+            }
+            else if let dict = $0 as? [String: Any]
+            {
+                return convertParamsForDecimal(dict, scale: scale) as Any
+            }
+            else if let doubleValue = $0 as? Double
+            {
+                return Decimal(doubleValue).rounded(scale: scale)
+            }
+            else
+            {
+                return $0
+            }
+        }
+    }
+}
+
+extension Decimal
+{
+    func rounded(scale: Int) -> Decimal
+    {
+        var value = self
+        var roundingResult: Decimal = 0
+
+        NSDecimalRound(
+            &roundingResult, // output
+            &value, // input
+            scale, // scale
+            .plain // rounding mode
+        )
+        
+        return roundingResult
+    }
 }
 
 //MARK: - *********************************************************************
@@ -302,7 +400,7 @@ extension UIWindow {
 extension CocoaDebug {
     
     ///init
-    static func initializationMethod(serverURL: String? = nil, ignoredURLs: [String]? = nil, onlyURLs: [String]? = nil, ignoredPrefixLogs: [String]? = nil, onlyPrefixLogs: [String]? = nil, additionalViewController: UIViewController? = nil, emailToRecipients: [String]? = nil, emailCcRecipients: [String]? = nil, mainColor: String? = nil, protobufTransferMap: [String: [String]]? = nil)
+    static func initializationMethod(serverURL: String? = nil, ignoredURLs: [String]? = nil, onlyURLs: [String]? = nil, ignoredPrefixLogs: [String]? = nil, onlyPrefixLogs: [String]? = nil, additionalViewController: UIViewController? = nil, emailToRecipients: [String]? = nil, emailCcRecipients: [String]? = nil, mainColor: String? = nil, protobufTransferMap: [String: [String]]? = nil, needConvertToDecimal: String? = nil, decimalScale: NSNumber? = nil)
     {
         if serverURL == nil {
             CocoaDebugSettings.shared.serverURL = ""
@@ -338,6 +436,9 @@ extension CocoaDebug {
         } else {//not first launch
             CocoaDebugSettings.shared.showBubbleAndWindow = CocoaDebugSettings.shared.showBubbleAndWindow
         }
+        
+        CocoaDebugSettings.shared.needConvertToDecimal = needConvertToDecimal
+        CocoaDebugSettings.shared.decimalScale = decimalScale
         
         CocoaDebugSettings.shared.visible = false
         CocoaDebugSettings.shared.logSearchWordNormal = nil
