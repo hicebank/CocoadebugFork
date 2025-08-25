@@ -199,6 +199,9 @@ import Foundation
     }
     @objc public var additionalViewController: UIViewController? = nil
     
+    @objc public var needConvertToDecimal: Bool = false
+    @objc public var decimalScale: Int = 10
+    
     //share via email
     @objc public var emailToRecipients: [String]? = nil
     @objc public var emailCcRecipients: [String]? = nil
