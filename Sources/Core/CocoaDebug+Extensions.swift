@@ -175,7 +175,7 @@ extension Data {
     ) -> String?
     {        
         if let dictionary = self.dataToDictionary(),
-           let str = dictionary.convertParamsForDecimal(dictionary, scale: scale).dictionaryToString() {
+           let str = convertParamsForDecimal(dictionary, scale: scale).dictionaryToString() {
             return str
         } else {
             return String(data: self, encoding: .utf8)
@@ -183,57 +183,50 @@ extension Data {
     }
 }
 
-extension Dictionary
+private func convertParamsForDecimal(_ dict: [String: Any], scale: Int) -> [String: Any]
 {
-    func convertParamsForDecimal(_ dict: [String: Any], scale: Int) -> [String: Any]
+    dict.mapValues
     {
-        var newDict: [String : Any] = [:]
+        value in
         
-        newDict = dict.mapValues
+        if let arrayValue = value as? [Any]
         {
-            value in
-            
-            if let arrayValue = value as? [Any]
-            {
-                return convertArrayForDecimal(array: arrayValue, scale: scale)
-            }
-            else if let dicValue = value as? [String: Any]
-            {
-                return convertParamsForDecimal(dicValue, scale: scale)
-            }
-            else if let doubleValue = value as? Double
-            {
-                return Decimal(doubleValue).rounded(scale: scale)
-            }
-            else
-            {
-                return value
-            }
+            return convertArrayForDecimal(array: arrayValue, scale: scale)
         }
-        
-        return newDict
-    }
-    
-    func convertArrayForDecimal(array: [Any], scale: Int) -> [Any]
-    {
-        return array.map
+        else if let dicValue = value as? [String: Any]
         {
-            if let array = $0 as? [Any]
-            {
-                return convertArrayForDecimal(array: array, scale: scale)
-            }
-            else if let dict = $0 as? [String: Any]
-            {
-                return convertParamsForDecimal(dict, scale: scale)
-            }
-            else if let doubleValue = $0 as? Double
-            {
-                return Decimal(doubleValue).rounded(scale: scale)
-            }
-            else
-            {
-                return $0
-            }
+            return convertParamsForDecimal(dicValue, scale: scale)
+        }
+        else if let doubleValue = value as? Double
+        {
+            return Decimal(doubleValue).rounded(scale: scale)
+        }
+        else
+        {
+            return value
+        }
+    }
+}
+
+private func convertArrayForDecimal(array: [Any], scale: Int) -> [Any]
+{
+    return array.map
+    {
+        if let array = $0 as? [Any]
+        {
+            return convertArrayForDecimal(array: array, scale: scale)
+        }
+        else if let dict = $0 as? [String: Any]
+        {
+            return convertParamsForDecimal(dict, scale: scale)
+        }
+        else if let doubleValue = $0 as? Double
+        {
+            return Decimal(doubleValue).rounded(scale: scale)
+        }
+        else
+        {
+            return $0
         }
     }
 }
@@ -387,7 +380,7 @@ extension UIWindow {
 extension CocoaDebug {
     
     ///init
-    static func initializationMethod(serverURL: String? = nil, ignoredURLs: [String]? = nil, onlyURLs: [String]? = nil, ignoredPrefixLogs: [String]? = nil, onlyPrefixLogs: [String]? = nil, additionalViewController: UIViewController? = nil, emailToRecipients: [String]? = nil, emailCcRecipients: [String]? = nil, mainColor: String? = nil, protobufTransferMap: [String: [String]]? = nil, needConvertToDecimal: Bool, decimalScale: NSNumber? = nil)
+    static func initializationMethod(serverURL: String? = nil, ignoredURLs: [String]? = nil, onlyURLs: [String]? = nil, ignoredPrefixLogs: [String]? = nil, onlyPrefixLogs: [String]? = nil, additionalViewController: UIViewController? = nil, emailToRecipients: [String]? = nil, emailCcRecipients: [String]? = nil, mainColor: String? = nil, protobufTransferMap: [String: [String]]? = nil, needConvertToDecimal: Bool = false, decimalScale: Int = 10)
     {
         if serverURL == nil {
             CocoaDebugSettings.shared.serverURL = ""

@@ -179,10 +179,11 @@ class NetworkDetailViewController: UITableViewController, MFMailComposeViewContr
     
     func setupContent(data: Data?) -> String?
     {
-        if CocoaDebugSettings.shared.needConvertToDecimal,
-           let scale = CocoaDebugSettings.shared.decimalScale
+        if CocoaDebugSettings.shared.needConvertToDecimal
         {
-            return data?.dataToPrettyPrintDataWithConvertDoubleToDecimal(scale: Int(truncating: scale))
+            return data?.dataToPrettyPrintDataWithConvertDoubleToDecimal(
+                scale:  CocoaDebugSettings.shared.decimalScale
+            )
         }
         else
         {

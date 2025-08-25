@@ -31,12 +31,12 @@ import UIKit
     @objc public static var mainColor: String = "#42d459"
     ///protobuf url and response class transfer map. Default value is `nil`.
     @objc public static var protobufTransferMap: [String: [String]]? = nil
-    
+    /// necessary for a more accurate withdrawal of the amount of money without garbage.(For example, banking applications). Default value is `false`.
     @objc public static var needConvertToDecimal: Bool = false
-    
-    @objc public static var decimalScale: NSNumber? = nil
+    /// rounding a number to a certain sign when working with a sum of money. Default value is `10`.
+    @objc public static var decimalScale: Int = 10
 
-    //MARK: - CocoaDebug enableC
+    //MARK: - CocoaDebug enable
     @objc public static func enable() {
         initializationMethod(serverURL: serverURL, ignoredURLs: ignoredURLs, onlyURLs: onlyURLs, ignoredPrefixLogs: ignoredPrefixLogs, onlyPrefixLogs: onlyPrefixLogs, additionalViewController: additionalViewController, emailToRecipients: emailToRecipients, emailCcRecipients: emailCcRecipients, mainColor: mainColor, protobufTransferMap: protobufTransferMap, needConvertToDecimal: needConvertToDecimal, decimalScale: decimalScale)
     }
