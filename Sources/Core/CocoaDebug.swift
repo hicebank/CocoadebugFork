@@ -32,7 +32,7 @@ import UIKit
     ///protobuf url and response class transfer map. Default value is `nil`.
     @objc public static var protobufTransferMap: [String: [String]]? = nil
     
-    @objc public static var needConvertToDecimal: String? = nil
+    @objc public static var needConvertToDecimal: Bool = false
     
     @objc public static var decimalScale: NSNumber? = nil
 

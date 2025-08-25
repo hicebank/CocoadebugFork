@@ -199,7 +199,7 @@ import Foundation
     }
     @objc public var additionalViewController: UIViewController? = nil
     
-    @objc public var needConvertToDecimal: String? = nil
+    @objc public var needConvertToDecimal: Bool = false
     @objc public var decimalScale: NSNumber? = nil
     
     //share via email

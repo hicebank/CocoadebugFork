@@ -400,7 +400,7 @@ extension UIWindow {
 extension CocoaDebug {
     
     ///init
-    static func initializationMethod(serverURL: String? = nil, ignoredURLs: [String]? = nil, onlyURLs: [String]? = nil, ignoredPrefixLogs: [String]? = nil, onlyPrefixLogs: [String]? = nil, additionalViewController: UIViewController? = nil, emailToRecipients: [String]? = nil, emailCcRecipients: [String]? = nil, mainColor: String? = nil, protobufTransferMap: [String: [String]]? = nil, needConvertToDecimal: String? = nil, decimalScale: NSNumber? = nil)
+    static func initializationMethod(serverURL: String? = nil, ignoredURLs: [String]? = nil, onlyURLs: [String]? = nil, ignoredPrefixLogs: [String]? = nil, onlyPrefixLogs: [String]? = nil, additionalViewController: UIViewController? = nil, emailToRecipients: [String]? = nil, emailCcRecipients: [String]? = nil, mainColor: String? = nil, protobufTransferMap: [String: [String]]? = nil, needConvertToDecimal: Bool, decimalScale: NSNumber? = nil)
     {
         if serverURL == nil {
             CocoaDebugSettings.shared.serverURL = ""
