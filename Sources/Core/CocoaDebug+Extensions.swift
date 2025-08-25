@@ -173,36 +173,23 @@ extension Data {
     func dataToPrettyPrintDataWithConvertDoubleToDecimal(
         scale: Int
     ) -> String?
-    {
-        let dictionary = self.dataToDictionary()
-        
-        if let str = dictionary?.convertParamsForDecimal(dictionary, scale: scale)?.dictionaryToString() {
+    {        
+        if let dictionary = self.dataToDictionary(),
+           let str = dictionary.convertParamsForDecimal(dictionary, scale: scale).dictionaryToString() {
             return str
         } else {
-            //2.protobuf
-            //            if let message = try? GPBMessage.parse(from: self) {
-            //                if message.serializedSize() > 0 {
-            //                    return message.description
-            //                } else {
-            //                    //3.utf-8 string
-            //                    return String(data: self, encoding: .utf8)
-            //                }
-            //            } else {
-            //3.utf-8 string
             return String(data: self, encoding: .utf8)
-            //            }
         }
     }
 }
 
 extension Dictionary
 {
-    func convertParamsForDecimal(_ dict: [String: Any]?, scale: Int) -> [String: Any]?
+    func convertParamsForDecimal(_ dict: [String: Any], scale: Int) -> [String: Any]
     {
-        guard var dict = dict
-        else { return nil }
+        var newDict: [String : Any] = [:]
         
-        dict = dict.mapValues
+        newDict = dict.mapValues
         {
             value in
             
@@ -212,7 +199,7 @@ extension Dictionary
             }
             else if let dicValue = value as? [String: Any]
             {
-                return convertParamsForDecimal(dicValue, scale: scale)!
+                return convertParamsForDecimal(dicValue, scale: scale)
             }
             else if let doubleValue = value as? Double
             {
@@ -224,7 +211,7 @@ extension Dictionary
             }
         }
         
-        return dict
+        return newDict
     }
     
     func convertArrayForDecimal(array: [Any], scale: Int) -> [Any]
@@ -237,7 +224,7 @@ extension Dictionary
             }
             else if let dict = $0 as? [String: Any]
             {
-                return convertParamsForDecimal(dict, scale: scale) as Any
+                return convertParamsForDecimal(dict, scale: scale)
             }
             else if let doubleValue = $0 as? Double
             {
