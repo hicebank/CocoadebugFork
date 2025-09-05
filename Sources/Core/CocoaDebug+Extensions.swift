@@ -183,6 +183,12 @@ extension Data {
     }
 }
 
+// MARK: - Need for present bool in logs when use func convertParamsForDecimal
+private func isBool<T>(value: T) -> Bool
+{
+    value is Bool
+}
+
 private func convertParamsForDecimal(_ dict: [String: Any], scale: Int) -> [String: Any]
 {
     dict.mapValues
@@ -197,7 +203,8 @@ private func convertParamsForDecimal(_ dict: [String: Any], scale: Int) -> [Stri
         {
             return convertParamsForDecimal(dicValue, scale: scale)
         }
-        else if let doubleValue = value as? Double
+        else if !isBool(value: value),
+                let doubleValue = value as? Double
         {
             return Decimal(doubleValue).rounded(scale: scale)
         }
@@ -220,7 +227,8 @@ private func convertArrayForDecimal(array: [Any], scale: Int) -> [Any]
         {
             return convertParamsForDecimal(dict, scale: scale)
         }
-        else if let doubleValue = $0 as? Double
+        else if !isBool(value: $0),
+                let doubleValue = $0 as? Double
         {
             return Decimal(doubleValue).rounded(scale: scale)
         }
