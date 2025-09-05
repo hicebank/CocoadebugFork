@@ -183,7 +183,7 @@ extension Data {
     }
 }
 
-// MARK: - Need for present bool in logs when use func convertParamsForDecimal
+// MARK: - Need for present bool in logs when using function convertParamsForDecimal
 private func isBool<T>(value: T) -> Bool
 {
     value is Bool
